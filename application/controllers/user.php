@@ -8,27 +8,7 @@ class user extends CI_Controller
 		parent::__construct();
 		cek_login();
 	}
-	// public function index()
-	// {
-	// 	$data['title'] = 'Peminjaman Lab';
-	// 	$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
-	// 	$data['pilih'] = $this->db->query("SELECT * FROM lab")->result_array();
-
-	// 	$data['duduk'] = $this->db->query("SELECT * FROM tempat_duduk WHERE id_lab =1")->result_array();
-
-	// 	$selanjutnya = [
-	// 		'selanjutnya' => 0
-	// 	];
-
-	// 	$this->session->set_userdata($selanjutnya); //simpen data di session
-	// 	$data['ok'] = $selanjutnya;
-
-	// 	$this->load->view('templates/header', $data);
-	// 	$this->load->view('templates/slidebar', $data);
-	// 	$this->load->view('templates/topbar', $data);
-	// 	$this->load->view('user/index', $data);
-	// 	$this->load->view('templates/footer', $data);
-	// }
+	
 
 	public function index()
 	{
