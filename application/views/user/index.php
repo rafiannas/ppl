@@ -46,17 +46,10 @@
                     <?php endforeach; ?>
                   </select>
                 </div>
-                <button class="btn btn-info">Selanjutnya</button>
-               <!--  <a href="<?= base_url('user/calendar'); ?>">Calendar</a> -->
-
-
               </div>
             </div>
           </div>
         </div>
-
-
-
       </div>
     </div>
 
