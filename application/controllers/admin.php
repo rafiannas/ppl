@@ -135,8 +135,9 @@ class admin extends CI_Controller
 	//--------------------------------HAPUS------------------------
 	public function hapus_admin($id)
 	{
+		$this->db->set('role', 2);
 		$this->db->where('id_user', $id);
-		$this->db->delete('user');
+		$this->db->update('user');
 
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Berhasil Menghapus Admin </div>');
 		redirect('admin/list_admin');
@@ -171,7 +172,7 @@ class admin extends CI_Controller
 	{
 
 		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-		$data['title'] = 'Ubah Profil ' . $data['user']['nama_user'];
+		$data['title'] = 'Ubah Profil ' . $data['user']['email'];
 		$data['user2'] = $this->db->get_where('user', ['id_user' => $id])->row_array();
 
 		$this->form_validation->set_rules('nama', 'Nama', 'required|trim');
@@ -248,19 +249,17 @@ class admin extends CI_Controller
 		$data['title'] = 'Tambah Admin';
 
 
-		$this->form_validation->set_rules('nama', 'Nama', 'required|trim');
-		$this->form_validation->set_rules('nim', 'Nim', 'required|trim|is_unique[user.nim_user]', [
-			'is_unique' => 'NIM/NIP sudah terdaftar!'
-		]);
-		$this->form_validation->set_rules('Phone_Number', 'Phone Number', 'required|trim');
-		$this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[user.email]', [
-			'is_unique' => 'Email has been registered!'
-		]);
-		$this->form_validation->set_rules('password1', 'Password', 'required|trim|min_length[4]|matches[password2]', [
-			'matches' => 'password dont match! ',
-			'min_length' => 'password too short!'
-		]);
-		$this->form_validation->set_rules('password2', 'Password2', 'required|trim|matches[password1]');
+		//$this->form_validation->set_rules('nama', 'Nama', 'required|trim');
+		//$this->form_validation->set_rules('nim', 'Nim', 'required|trim|is_unique[user.nim_user]', [
+		//	'is_unique' => 'NIM/NIP sudah terdaftar!'
+		//]);
+		//$this->form_validation->set_rules('Phone_Number', 'Phone Number', 'required|trim');
+		$this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email');
+		// $this->form_validation->set_rules('password1', 'Password', 'required|trim|min_length[4]|matches[password2]', [
+		// 	'matches' => 'password dont match! ',
+		// 	'min_length' => 'password too short!'
+		// ]);
+		//	$this->form_validation->set_rules('password2', 'Password2', 'required|trim|matches[password1]');
 
 		if ($this->form_validation->run() == false) {
 			$this->load->view('templates/header', $data);
@@ -269,18 +268,25 @@ class admin extends CI_Controller
 			$this->load->view('admin/tambah_admin', $data);
 			$this->load->view('templates/footer', $data);
 		} else {
-			$data = [
-				'nama_user' => htmlspecialchars($this->input->post('nama', true)),
-				'nim_user' => htmlspecialchars($this->input->post('nim', true)),
-				'email' => htmlspecialchars($this->input->post('email', true)),
-				'password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
-				'no_hp' => htmlspecialchars($this->input->post('Phone_Number', true)),
-				'role' => 1,
-			];
-			$this->db->insert('user', $data);
+			$email = htmlspecialchars($this->input->post('email', true));
 
-			$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Berhasil Menambahkan Admin</div>');
-			redirect('admin/list_admin');
+			$cek = $this->db->get_where('user', ['email' => $email])->row_array();
+
+			if (!$cek) {
+				$this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Email tidak terdaftar ! </div>');
+				redirect('admin/tambah_admin');
+			} else if ($cek['role'] == 1) {
+				$this->session->set_flashdata('message', '<div class="alert alert-warning" role="alert">Email seudh terdaftar menjadi admin ! </div>');
+				redirect('admin/tambah_admin');
+			} else {
+
+				$this->db->set('role', 1);
+				$this->db->where('email', $email);
+				$this->db->update('user');
+
+				$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Berhasil Menambahkan Admin</div>');
+				redirect('admin/list_admin');
+			}
 		}
 	}
 	public function tambah_lab()
@@ -383,5 +389,4 @@ class admin extends CI_Controller
 		$this->load->view('admin/last', $data);
 		$this->load->view('templates/footer', $data);
 	}
-	
 }
