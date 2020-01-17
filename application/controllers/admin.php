@@ -6,7 +6,7 @@ class admin extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		cek_login();
+		// cek_login();
 	}
 
 
@@ -14,7 +14,7 @@ class admin extends CI_Controller
 	{
 
 		$data['title'] = 'Dashboard';
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$data['admin'] = $this->db->query("SELECT COUNT(id_user) AS jumlah FROM user WHERE role=1")->row_array();
 		$data['member'] = $this->db->query("SELECT COUNT(id_user) AS jumlah FROM user WHERE role=2")->row_array();
 
@@ -33,7 +33,7 @@ class admin extends CI_Controller
 
 		$data['title'] = 'List Admin';
 		$data['title2'] = 'Laboratorium Informatika';
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$data['admin'] = $this->db->query("SELECT * FROM user WHERE role=1")->result_array();
 
 		$this->load->view('templates/header', $data);
@@ -47,8 +47,8 @@ class admin extends CI_Controller
 
 		$data['title'] = 'Daftar Anggota';
 		$data['title2'] = 'Laboratorium Informatika';
-		
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$data['member'] = $this->db->query("SELECT * FROM user WHERE role=2")->result_array();
 
 		$this->load->view('templates/header', $data);
@@ -62,7 +62,7 @@ class admin extends CI_Controller
 
 		$data['title'] = 'Daftar Laboratorium Informatika';
 		$data['title2'] = 'Universitas Al Azhar Indonesia';
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$data['lab'] = $this->db->query("SELECT* FROM lab")->result_array();
 
 		$this->load->view('templates/header', $data);
@@ -75,7 +75,7 @@ class admin extends CI_Controller
 	{
 
 		$data['title'] = 'List Peminjaman Lab Informatika';
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$role = $data['user']['role'];
 
 
@@ -96,7 +96,7 @@ class admin extends CI_Controller
 		$this->form_validation->set_rules('akhir', 'Akhir', 'required|trim');
 
 		$data['title'] = 'List Peminjaman Lab Informatika';
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$role = $data['user']['role'];
 
 		$flag = ['flag' => 1];
@@ -119,10 +119,10 @@ class admin extends CI_Controller
 
 
 
-		$q_pinjam = "SELECT peminjaman.* , user.nama_user ,lab.nama_lab 
+		$q_pinjam = "SELECT peminjaman.* , user.email ,lab.nama_lab 
 					FROM peminjaman, lab, user
-					WHERE peminjaman.nim_user = user.nim_user AND
-					peminjaman.kode_lab = lab.kode_lab AND peminjaman.status <> 'MENUNGGU' AND peminjaman.tanggal_pinjam BETWEEN '$awall' AND '$akhirr' 
+					WHERE peminjaman.email_user = user.email AND
+					peminjaman.kode_lab = lab.kode_lab AND peminjaman.status <> 'fas fa-fw fa-clock' AND peminjaman.tanggal_pinjam BETWEEN '$awall' AND '$akhirr' 
 		";
 		$data['pinjam'] = $this->db->query($q_pinjam)->result_array();
 
@@ -170,7 +170,7 @@ class admin extends CI_Controller
 	public function ubah_admin($id)
 	{
 
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$data['title'] = 'Ubah Profil ' . $data['user']['nama_user'];
 		$data['user2'] = $this->db->get_where('user', ['id_user' => $id])->row_array();
 
@@ -213,7 +213,7 @@ class admin extends CI_Controller
 
 	public function ubah_lab($id)
 	{
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$data['lab'] = $this->db->get_where('lab', ['id_lab' => $id])->row_array();
 		$data['title'] = 'Ubah Lab ' . $data['lab']['nama_lab'];
 
@@ -244,7 +244,7 @@ class admin extends CI_Controller
 	//----------------------TAMBAH-------------------------------------------
 	public function tambah_admin()
 	{
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$data['title'] = 'Tambah Admin';
 
 
@@ -285,7 +285,7 @@ class admin extends CI_Controller
 	}
 	public function tambah_lab()
 	{
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$data['title'] = 'Tambah Lab';
 
 		$this->form_validation->set_rules('kode', 'Kode', 'required|trim');
@@ -314,13 +314,14 @@ class admin extends CI_Controller
 	{
 		$data['title'] = 'Daftar Peminjaman ';
 		$data['title2'] = 'Laboratorium Informatika';
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 
 
-		$q_req = "SELECT peminjaman.* , user.nama_user ,lab.nama_lab 
-				FROM peminjaman, lab, user
-				WHERE peminjaman.nim_user = user.nim_user AND
-				peminjaman.kode_lab = lab.kode_lab AND status= 'MENUNGGU'
+		$q_req = "SELECT kegiatan.*, peminjaman.* , user.email ,lab.nama_lab 
+				FROM peminjaman, lab, user, kegiatan
+				WHERE peminjaman.email_user = user.email AND
+				peminjaman.kode_lab = lab.kode_lab AND status= 'fas fa-fw fa-clock'
+				AND kegiatan.id = peminjaman.id_kegiatan
 
 		";
 		$data['pinjam'] = $this->db->query($q_req)->result_array();
@@ -334,7 +335,7 @@ class admin extends CI_Controller
 	public function izinkan($id)
 	{
 		$data = [
-			'status' => 'DI SETUJUI'
+			'status' => 'fas fa-fw fa-check'
 
 
 		];
@@ -348,7 +349,7 @@ class admin extends CI_Controller
 	public function tolak($id)
 	{
 		$data = [
-			'status' => 'DI TOLAK'
+			'status' => 'fas fa-fw fa-times'
 
 
 		];
@@ -359,4 +360,28 @@ class admin extends CI_Controller
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Berhasil Menolak Peminjmana Lab</div>');
 		redirect('admin/req');
 	}
+
+	public function last()
+	{
+		$data['title'] = 'Daftar Peminjaman ';
+		$data['title2'] = 'Laboratorium Informatika';
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+		$query = "SELECT * FROM peminjaman, user, lab, kegiatan
+			WHERE peminjaman.email_user = user.email AND
+				peminjaman.kode_lab = lab.kode_lab 
+				AND kegiatan.id = peminjaman.id_kegiatan
+				AND peminjaman.status <> 'fas fa-fw fa-clock'		
+		";
+
+		$data['peminjaman'] = $this->db->query($query)->result_array();
+
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('templates/slidebar', $data);
+		$this->load->view('templates/topbar', $data);
+		$this->load->view('admin/last', $data);
+		$this->load->view('templates/footer', $data);
+	}
+	
 }

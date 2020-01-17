@@ -6,16 +6,66 @@ class user extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		cek_login();
+		//cek_login();
 	}
-	
+
 
 	public function index()
 	{
+
+		// $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+		// // echo $data['user']['email'];
+		// // 	echo $data['user']['role'];
+		// $data['lab'] = $this->db->get('lab')->result_array();
+		// $data['jam'] = $this->db->get('jam')->result_array();
+
+		// $data['pLab'] = $this->db->get('lab')->result_array();
+		// $data['pJam'] = $this->db->get('jam')->result_array();
+
+
+		// $data['title'] = 'Form Peminjaman Laboratorium Informatika';
+		// $data['title2'] = 'Universitas Al Azhar Indonesia';
+		// $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+		// $data['pilih'] = $this->db->query("SELECT * FROM lab")->result_array();
+
+
+		// $this->form_validation->set_rules('kegiatan', 'Kegiatan', 'required|trim');
+		// $this->form_validation->set_rules('pilih_lab', 'Lab', 'required|trim');
+		// $this->form_validation->set_rules('jam_mulai', 'JM', 'required|trim');
+		// $this->form_validation->set_rules('jam_selesai', 'JS', 'required|trim');
+
+
+		// if ($this->form_validation->run() == false) {
+		// 	$this->load->view('templates/header', $data);
+		// 	$this->load->view('templates/slidebar', $data);
+		// 	$this->load->view('templates/topbar', $data);
+		// 	$this->load->view('user/index', $data);
+		// 	$this->load->view('templates/footer', $data);
+		// } else {
+		// 	$k = $this->input->post('kegiatan');
+		// 	$pl = $this->input->post('pilih_lab');
+		// 	$jm = $this->input->post('jam_mulai');
+		// 	$js = $this->input->post('jam_selsai');
+
+		// 	$data = [
+		// 		'nim_user' => $this->session->userdata('nim'),
+		// 		'kode_lab' => $pl,
+		// 		'kegiatan' => $k,
+		// 		'tanggal_pinjam' => date('d M Y'),
+		// 		'jam_mulai' => $jm,
+		// 		'jam_selesai' => $js
+		// 	];
+		// 	$this->db->insert('peminjaman', $data);
+		// 	$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">YBerhasil Menambahkan Peminjaman</div>');
+		// 	redirect('user/index');
+		// }
+
 		//$data['ok'] = 1;
 		$data['title'] = 'Peminjaman Lab';
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$data['pilih'] = $this->db->query("SELECT * FROM lab")->result_array();
+		$data['kegiatan'] = $this->db->get('kegiatan')->result_array();
 
 		// $data['duduk'] = $this->db->query("SELECT * FROM tempat_duduk WHERE id_lab =1")->result_array();
 		// $ok = 1;
@@ -43,6 +93,7 @@ class user extends CI_Controller
 			$this->session->set_userdata($selanjutnya); //simpen data di session
 			redirect('user/next');
 		}
+
 	}
 
 	public function next()
@@ -51,7 +102,7 @@ class user extends CI_Controller
 
 
 		$data['title'] = 'Peminjaman Lab';
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$data['pilih'] = $this->db->query("SELECT * FROM lab")->result_array();
 		$seat = $this->session->userdata('lab');
 		$data['gambar'] = $this->db->get_where('lab', ['kode_lab' => $this->session->userdata('lab')])->row_array();
@@ -59,11 +110,12 @@ class user extends CI_Controller
 		$data['tgl'] = $this->session->userdata('tgl');
 		$data['duduk'] = $this->db->query("SELECT * FROM tempat_duduk WHERE id_lab =$seat ")->result_array();
 		$pjm =  $this->session->userdata('tgl');
+		$data['jam']= $this->db->get('jam')->result_array();
 
 		$q_p = "SELECT *
 				FROM peminjaman
 				WHERE kode_lab = '$seat' AND
-				status = 'DI SETUJUI' AND
+				status = 'fas fa-fw fa-check' AND
 				tanggal_pinjam = '$pjm'
 		";
 		$data['pinjam'] = $this->db->query($q_p)->result_array();
@@ -122,7 +174,7 @@ class user extends CI_Controller
 				$cek2 = $this->db->query("SELECT * FROM peminjaman WHERE tanggal_pinjam = '$tgl' AND kode_lab = '$lab'  ")->result_array();
 
 				foreach ($cek2 as $ko2) {
-					if (($mulai >= $ko2['jam_mulai'] && $mulai <= $ko2['jam_selesai']) || ($selesai >= $ko2['jam_mulai'] && $selesai <= $ko2['jam_selesai'])) {
+					if (($mulai > $ko2['jam_mulai'] && $mulai <= $ko2['jam_selesai']) || ($selesai > $ko2['jam_mulai'] && $selesai <= $ko2['jam_selesai'])) {
 						$flag3 = True;
 					} //else if ($selesai >= $ko2['jam_mulai'] && $selesai <= $ko2['jam_selesai']) {
 					// 	$flag3 = True;
@@ -216,14 +268,14 @@ class user extends CI_Controller
 
 
 			$data = [
-				'nim_user' => $this->session->userdata('nim'),
+				'email_user' => $this->session->userdata('email'),
 				'kode_lab' => $lab,
-				'kegiatan' => $kegiatan,
+				'id_kegiatan' => $kegiatan,
 				'tanggal_pinjam' => $tgl,
 				'jam_mulai' => $mulai,
 				'tempat_duduk' => $kursi,
 				'jam_selesai' => $selesai,
-				'status' => 'MENUNGGU'
+				'status' => 'fas fa-fw fa-clock'
 			];
 
 			$this->db->insert('peminjaman', $data);
@@ -237,7 +289,7 @@ class user extends CI_Controller
 	public function c_pass()
 	{
 		$data['title'] = 'Change password';
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 
 
 		$this->form_validation->set_rules('last_password', 'Last password', 'required|trim');
@@ -285,15 +337,18 @@ class user extends CI_Controller
 	}
 	public function riwayat()
 	{
-		$data['title'] = 'Riwayat Peminjaman Lab';
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
-		$nim_u = $this->session->userdata('nim');
-		$q_pinjam = "SELECT peminjaman.* ,lab.nama_lab 
-		FROM peminjaman, lab
-		WHERE peminjaman.kode_lab = lab.kode_lab AND
-		nim_user = $nim_u
+		$data['title'] = 'Riwayat Peminjaman Laboratorium Informatika';
+		$data['title2'] = 'Universitas Al Azhar Indonesia';
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+		$email = $this->session->userdata('email');
 
-";
+		$q_pinjam = "SELECT kegiatan.*, peminjaman.*, lab.nama_lab , user.email 
+		FROM peminjaman, lab, user, kegiatan
+		WHERE peminjaman.kode_lab = lab.kode_lab 
+		AND peminjaman.email_user = user.email
+		AND peminjaman.email_user = '$email' 
+		AND kegiatan.id = peminjaman.id_kegiatan
+		";
 
 		$data['pinjam'] = $this->db->query($q_pinjam)->result_array();
 		$this->load->view('templates/header', $data);
@@ -309,7 +364,7 @@ class user extends CI_Controller
 	{
 
 
-		$data['user'] = $this->db->get_where('user', ['nim_user' => $this->session->userdata('nim')])->row_array();
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$data['lab'] = $this->db->get('lab')->result_array();
 		$data['jam'] = $this->db->get('jam')->result_array();
 

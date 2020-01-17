@@ -46,7 +46,7 @@
                     <?php endforeach; ?>
                 </select>
             </div>
-            <button class="btn btn-primary">Selanjutnya</button>
+            <button class="btn btn-info">Selanjutnya</button>
         </div>
         <div class="row">
             <div class="col-lg-4">
@@ -82,17 +82,17 @@
 
 
 
-        <label>Dari Jam</label>
+        <label>Jam Mulai</label>
         <div class="form-group">
             <input class="form-control form-control-user" type="time" name="mulai" id="mulai">
         </div>
 
-        <label>Samai Jam</label>
+        <label>Jam Selesai</label>
         <div class="form-group">
             <input class="form-control form-control-user" type="time" name="selesai" id="selesai">
         </div>
        
-        <button class="btn btn-primary">Pesan</button>
+        <button class="btn btn-info">Pesan</button>
 
 
 

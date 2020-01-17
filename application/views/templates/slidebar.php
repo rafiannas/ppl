@@ -83,7 +83,8 @@
 
 
     <li class="nav-item">
-      <a class="nav-link" href="<?= base_url('auth/logout');   ?>">
+      <!-- <a class="nav-link" href="<?= base_url('auth/logout');   ?>"> -->
+                 <a class="dropdown-item" href="<?= base_url('auth/logout');   ?>" data-toggle="modal" data-target="#logoutModal">
         <i class="fas fa-fw fa-sign-out-alt"></i>
 
         <span>Logout</span></a>

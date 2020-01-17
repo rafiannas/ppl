@@ -19,18 +19,19 @@
                   <h1 class="h4 text-gray-900 "><b>Login</b></h1>
                   <h4 class="h5 text-gray-900">Peminjaman Laboratorium Informatika</h4>
                   <p class="h5 text-gray-900 mb-3">Universitas Al Azhar Indonesia</p>
+                  <span style="float-bottom">Silahkan login menggunakan Gmail IF </span>
                 </div>
 
                 <?= $this->session->flashdata('message');  ?>
-
+                <!-- 
                 <form class="user" method="post" action=" <?= base_url('auth'); ?> ">
                   <div class="form-group">
-                    <label class="h6 ml-3 text-gray-900">Masukkan NIM</label>
-                    <input type="number" class="form-control form-control-user" id="nim" name="nim" placeholder="Masukkn NIM">
+                    <label class="h6 ml-3 text-gray-900">Masukkan Email</label>
+                    <input type="email" class="form-control form-control-user" id="nim" name="nim" placeholder="Masukkan Email">
                     <?= form_error('nim', '<small class="text-danger pl-3">', '</small>');  ?>
                   </div>
                   <div class="form-group">
-                  <label class="h6 ml-3 text-gray-900">Masukkan Password</label>
+                    <label class="h6 ml-3 text-gray-900">Masukkan Password</label>
                     <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Masukkan Password...">
                     <?= form_error('password', '<small class="text-danger pl-3">', '</small>');  ?>
                   </div>
@@ -40,15 +41,16 @@
                   </button>
 
 
-                </form>
+                </form> -->
                 <hr>
                 <!-- <div class="text-center">
                     <a class="small" href="forgot-password.html">Forgot Password?</a>
                   </div> -->
                 <div class="text-center">
-             
-                  <a class="small" href="<?= base_url('auth/registration'); ?>"><i class="fab fa-google fa-3x"></i></a>
-                 
+
+                  <a class="small" href="<?= $google; ?>"><i class="fab fa-google fa-3x"></i></a>
+                  <!-- <a class= btn style="margin-left:47%; margin-top: 20%" href = "<?= $google; ?>" ><i class="fab fa-google fa-3x"></i></a> -->
+
                   <br><br>
                 </div>
               </div>
